@@ -2,7 +2,9 @@ package com.stem.chatcake.Fragment;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +21,29 @@ public class RoomsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         FragmentRoomsBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_rooms, container, false);
         View parent = binding.getRoot();
 
+        SwipeRefreshLayout refreshLayout = parent.findViewById(R.id.rooms_swipe_refresh);
+        refreshLayout.setColorSchemeResources(
+                R.color.colorPrimary,
+                R.color.colorAccent
+        );
+
         // Dependency Injection
         RoomsViewModel viewModel = RoomsViewModel.builder()
                 .context(getContext())
-                .parent(parent)
                 .httpService(HttpService.getInstance())
                 .storageService(StorageService.getInstance(getContext()))
+                .refreshLayout(refreshLayout)
                 .build();
 
         binding.setViewModel(viewModel);
 
         return parent;
     }
+
+
 }
