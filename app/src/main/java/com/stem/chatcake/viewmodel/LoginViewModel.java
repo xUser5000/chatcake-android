@@ -3,54 +3,34 @@ package com.stem.chatcake.viewmodel;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.widget.Toast;
 
-import com.stem.chatcake.BR;
 import com.stem.chatcake.model.User;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.StorageService;
 import com.stem.chatcake.view.HomeActivity;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Getter
+@Setter
+@Builder
 public class LoginViewModel extends BaseObservable {
 
+    // dependencies
     private Context context;
-
-    private String username;
-    private String password;
-
     private HttpService httpService;
     private StorageService storageService;
 
-    public LoginViewModel (Context context) {
-        this.context = context;
-        httpService = HttpService.getInstance();
-        storageService = StorageService.getInstance(context);
-    }
+    // state
+    private String username;
+    private String password;
 
-    @Bindable
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-        notifyPropertyChanged(BR.viewModel);
-    }
-
-    @Bindable
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-        notifyPropertyChanged(BR.viewModel);
-    }
 
     public void login () {
         if (username == null || password == null) {
@@ -58,7 +38,11 @@ public class LoginViewModel extends BaseObservable {
             return;
         }
 
-        User user = new User(username, password);
+        // constructing the user
+        User user = User.builder()
+                .username(username)
+                .password(password)
+                .build();
 
         Call<User> call = httpService.getApi().login(user);
         call.enqueue(new Callback<User>() {

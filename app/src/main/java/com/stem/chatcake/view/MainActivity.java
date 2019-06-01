@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.stem.chatcake.R;
 import com.stem.chatcake.databinding.ActivityMainBinding;
+import com.stem.chatcake.service.StorageService;
 import com.stem.chatcake.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,6 +16,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setViewModel(new MainViewModel(this));
+        MainViewModel viewModel = MainViewModel.builder()
+                .context(this)
+                .storageService(StorageService.getInstance(this))
+                .build();
+        binding.setViewModel(viewModel);
     }
 }

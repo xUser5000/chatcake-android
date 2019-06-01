@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.stem.chatcake.R;
 import com.stem.chatcake.databinding.ActivityRegisterBinding;
+import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.viewmodel.RegisterViewModel;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -14,7 +15,10 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityRegisterBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_register);
-        RegisterViewModel viewModel = new RegisterViewModel(this);
+        RegisterViewModel viewModel = RegisterViewModel.builder()
+                .context(this)
+                .httpService(HttpService.getInstance())
+                .build();
         binding.setViewModel(viewModel);
     }
 }

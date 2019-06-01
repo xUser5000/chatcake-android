@@ -3,65 +3,35 @@ package com.stem.chatcake.viewmodel;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.BaseObservable;
-import android.databinding.Bindable;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.stem.chatcake.BR;
 import com.stem.chatcake.model.User;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.view.LoginActivity;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Getter
+@Setter
+@Builder
 public class RegisterViewModel extends BaseObservable {
 
+    // dependencies
     private Context context;
+    private HttpService httpService;
 
+    // state
     private String name;
     private String username;
     private String password;
 
-    private HttpService httpService;
-
-    public RegisterViewModel(Context context) {
-        this.context = context;
-        httpService = HttpService.getInstance();
-    }
-
-    @Bindable
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-        notifyPropertyChanged(BR.viewModel);
-    }
-
-    @Bindable
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-        notifyPropertyChanged(BR.viewModel);
-    }
-
-    @Bindable
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-        notifyPropertyChanged(BR.viewModel);
-    }
-
+    // register a new user
     public void register () {
 
         // validation
@@ -76,7 +46,12 @@ public class RegisterViewModel extends BaseObservable {
             return;
         }
 
-        User user = new User(name, username, password);
+        // constructing the user
+        User user = User.builder()
+                .name(name)
+                .password(password)
+                .username(username)
+                .build();
 
         Call<ResponseBody> call = httpService.getApi().register(user);
         call.enqueue(new Callback<ResponseBody>() {

@@ -8,14 +8,16 @@ import com.stem.chatcake.view.HomeActivity;
 import com.stem.chatcake.view.LoginActivity;
 import com.stem.chatcake.view.RegisterActivity;
 
+import lombok.Builder;
+
+@Builder
 public class MainViewModel {
 
+    // dependencies
     private Context context;
     private StorageService storageService;
 
-    public MainViewModel(Context context) {
-        this.context = context;
-        storageService = StorageService.getInstance(context);
+    public MainViewModel() {
         if (storageService.loggedIn()) {
             context.startActivity(new Intent(context, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
