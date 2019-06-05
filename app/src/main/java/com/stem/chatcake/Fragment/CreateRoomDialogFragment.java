@@ -1,93 +1,92 @@
 package com.stem.chatcake.Fragment;
 
-
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.stem.chatcake.R;
 import com.stem.chatcake.model.Room;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.StorageService;
+import com.stem.chatcake.viewmodel.RoomsViewModel;
 
+import lombok.Getter;
+import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CreateRoomDialogFragment extends DialogFragment implements View.OnClickListener {
+@Setter
+@Getter
+public class CreateRoomDialogFragment extends DialogFragment {
 
-    private EditText roomNameText;
-    private Button createButton;
+    // dependencies
     private HttpService httpService;
     private StorageService storageService;
 
-    public CreateRoomDialogFragment() {
-        // Required empty public constructor
+    private EditText roomNameText;
+    private Button createRoomButton;
+
+    private RoomsViewModel hostViewModel;
+
+    public CreateRoomDialogFragment () {}
+
+    public static CreateRoomDialogFragment newInstance (HttpService httpService, StorageService storageService) {
+        CreateRoomDialogFragment fragment = new CreateRoomDialogFragment();
+        fragment.setHttpService(httpService);
+        fragment.setStorageService(storageService);
+        return fragment;
     }
 
-    @NonNull
+    public interface OnDialogDismissListener {
+        void onDialogDismissed (Room room);
+    }
+
+    @Nullable
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View parent = inflater.inflate(R.layout.fragment_create_room_dialog, null);
-        roomNameText = parent.findViewById(R.id.create_room_name);
-        createButton = parent.findViewById(R.id.create_room_button);
-        createButton.setOnClickListener(this);
-        httpService = HttpService.getInstance();
-        storageService = StorageService.getInstance(getContext());
-        builder.setView(parent);
-        builder.setTitle("Create new room");
-        return builder.create();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_create_room_dialog, container);
     }
 
-    public void createRoom () {
-        String token = storageService.getToken();
-        final String roomName = roomNameText.getText().toString().trim();
-
-        if (roomName.equals("")) {
-            Toast.makeText(getContext(), "Please, fill out all the fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Call<Room> call = httpService.getApi().createRoom(token, roomName);
-        call.enqueue(new Callback<Room>() {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        roomNameText = view.findViewById(R.id.create_room_name);
+        createRoomButton = view.findViewById(R.id.create_room_button);
+        createRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<Room> call, Response<Room> response) {
-                if (!response.isSuccessful()) {
-                    httpService.showErrors(getContext(), response);
-                    return;
-                }
-
-                Toast.makeText(getContext(), roomName + " room Created", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.putExtra("roomName", roomName);
-                intent.putExtra("roomId", response.body().getId());
-                getTargetFragment().onActivityResult(0, 0, intent);
-                dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<Room> call, Throwable t) {
-                t.printStackTrace();
-                Toast.makeText(getContext(), "Something went wrong....", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                createRoom();
             }
         });
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.create_room_button) {
-            createRoom();
-        }
+    public void createRoom () {
+        String token = storageService.getToken();
+        String roomName = roomNameText.getText().toString().trim();
+        Call<Room> call = httpService.getApi().createRoom(token, roomName);
+        call.enqueue(new Callback<Room>() {
+            @Override
+            public void onResponse(Call<Room> call, Response<Room> response) {
+                if (response.isSuccessful()) {
+
+                    if (hostViewModel != null)
+                        hostViewModel.onDialogDismissed(response.body());
+
+                    dismissAllowingStateLoss();
+
+                } else httpService.showErrors(getContext(), response);
+            }
+
+            @Override
+            public void onFailure(Call<Room> call, Throwable t) {
+                httpService.showClientErrors(getContext(), t);
+            }
+        });
     }
 }

@@ -1,17 +1,16 @@
 package com.stem.chatcake.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-class Message {
+@Builder
+public class Message {
 
-    private String member;
+    private String from;
     private String content;
+    private String roomId;
 
-    public Message(String member, String content) {
-        this.member = member;
-        this.content = content;
-    }
 }

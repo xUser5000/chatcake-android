@@ -1,6 +1,6 @@
 package com.stem.chatcake.viewmodel;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 
 import com.stem.chatcake.service.StorageService;
@@ -14,20 +14,22 @@ import lombok.Builder;
 public class MainViewModel {
 
     // dependencies
-    private Context context;
+    private Activity host;
     private StorageService storageService;
 
-    public MainViewModel() {
+    public void init () {
+        // if the user is logged in, redirect them to the home page
         if (storageService.loggedIn()) {
-            context.startActivity(new Intent(context, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            host.startActivity(new Intent(host, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            host.finish();
         }
     }
 
     public void goLogin () {
-        context.startActivity(new Intent(context, LoginActivity.class));
+        host.startActivity(new Intent(host, LoginActivity.class));
     }
 
     public void goRegister () {
-        context.startActivity(new Intent(context, RegisterActivity.class));
+        host.startActivity(new Intent(host, RegisterActivity.class));
     }
 }

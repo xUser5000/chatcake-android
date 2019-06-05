@@ -20,7 +20,7 @@ public class HttpService {
     private static HttpService instance = null;
 
     private Api api;
-    private final String BASE_URL = "http://192.168.43.50:3000/api/";
+    private final String BASE_URL = "http://192.168.1.4:3000/api/";
     private Retrofit retrofit;
 
     private HttpService () {
@@ -53,6 +53,11 @@ public class HttpService {
     public void showErrors (Context context, Response<?> response) {
         ApiError apiError = parseError(response);
         Toast.makeText(context, apiError.getErrors().get(0), Toast.LENGTH_SHORT).show();
+    }
+
+    public void showClientErrors (Context context, Throwable t) {
+        t.printStackTrace();
+        Toast.makeText(context, "Something went wrong.....", Toast.LENGTH_SHORT).show();
     }
 
     public Api getApi () {

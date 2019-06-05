@@ -11,15 +11,26 @@ import com.stem.chatcake.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MainViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        MainViewModel viewModel = MainViewModel.builder()
-                .context(this)
+
+        // constructing the view model
+        viewModel = MainViewModel.builder()
+                .host(this)
                 .storageService(StorageService.getInstance(this))
                 .build();
+
         binding.setViewModel(viewModel);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        viewModel.init();
     }
 }

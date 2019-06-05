@@ -1,97 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".view.RoomActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+    <data>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <variable
+            name="viewModel"
+            type="com.stem.chatcake.viewmodel.RoomViewModel" />
 
-            <TextView
-                android:id="@+id/room_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:minHeight="?actionBarSize"
-                android:padding="@dimen/appbar_padding"
-                android:text="Room Name"
-                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:textColor="@android:color/white" />
+    </data>
 
-            <ImageButton
-                android:id="@+id/room_room_info_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_info_outline_white_24dp" />
-
-        </RelativeLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
+    <!-- Parent Container -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/room_main_content">
+        android:layout_height="match_parent">
 
-        <!-- Messages -->
-        <ListView
-            android:id="@+id/room_messages_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="80dp" />
-
-        <!-- Form -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_alignParentBottom="true"
-            android:layoutDirection="rtl"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp">
-
-            <!-- Send Button -->
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/ic_send_white_24dp" />
-
-            <!-- Text Field -->
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:gravity="left"
-                android:hint="Send message" />
-
-        </LinearLayout>
-
+        <!-- Progress Layout -->
         <RelativeLayout
-            android:id="@+id/room_progress_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible">
+            android:background="@android:color/white">
 
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
 
-    </RelativeLayout>
+        <!-- Main Content -->
+        <LinearLayout
+            android:id="@+id/room_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/room_name"
+                        style="@style/AppBar_Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.roomName}" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        android:background="@android:color/transparent"
+                        android:onClick="@{() -> viewModel.goToRoomInfo()}"
+                        android:src="@drawable/ic_info_outline_white_24dp" />
+
+                </RelativeLayout>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- Messages -->
+                <ListView
+                    android:id="@+id/room_messages_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="80dp"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="15dp"
+                    android:listSelector="@android:color/transparent"
+                    android:padding="20dp" />
+
+                <!-- Form -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_alignParentBottom="true"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
+
+                    <!-- Send Button -->
+                    <android.support.design.widget.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:onClick="@{() -> viewModel.sendMessage()}"
+                        android:src="@drawable/ic_send_white_24dp" />
+
+                    <!-- Text Field -->
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:gravity="left"
+                        android:hint="Send message"
+                        android:text="@={viewModel.content}" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

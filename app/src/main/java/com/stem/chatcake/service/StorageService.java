@@ -35,11 +35,11 @@ public class StorageService {
     }
 
     public User getUserInfo () {
-        User user = new User();
-        user.setId(sharedPreferences.getString("id", null));
-        user.setName(sharedPreferences.getString("name", null));
-        user.setUsername(sharedPreferences.getString("username", null));
-        user.setToken(sharedPreferences.getString("token", null));
+        User user = User.builder()
+            .id(sharedPreferences.getString("id", null))
+            .name(sharedPreferences.getString("name", null))
+            .username(sharedPreferences.getString("username", null))
+            .token(sharedPreferences.getString("token", null)).build();
         return user;
     }
 
@@ -55,7 +55,7 @@ public class StorageService {
         return sharedPreferences.contains("token");
     }
 
-    public void saveRooms (List<Room> rooms) {
+    private void saveRooms (List<Room> rooms) {
         String roomsString = converter.toJson(rooms);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("rooms", roomsString);
@@ -64,12 +64,6 @@ public class StorageService {
 
     private List<Room> getRooms () {
         return (List<Room>) converter.fromJson(sharedPreferences.getString("rooms", null), List.class);
-    }
-
-    public void addRoom (Room room) {
-        List<Room> rooms = getRooms();
-        rooms.add(room);
-        saveRooms(rooms);
     }
 
 }

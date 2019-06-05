@@ -56,6 +56,9 @@ public class LoginViewModel extends BaseObservable {
                 // save user info in the local storage
                 storageService.saveUserInfo(response.body());
 
+                // display a welcome message
+                Toast.makeText(context, "Welcome" + response.body().getName(), Toast.LENGTH_SHORT).show();
+
                 // redirect to the home page
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -64,8 +67,7 @@ public class LoginViewModel extends BaseObservable {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                t.printStackTrace();
-                Toast.makeText(context, "Something went wrong....", Toast.LENGTH_SHORT).show();
+                httpService.showClientErrors(context, t);
             }
         });
     }

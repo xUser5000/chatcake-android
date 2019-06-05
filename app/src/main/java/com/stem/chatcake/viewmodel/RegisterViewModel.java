@@ -70,8 +70,7 @@ public class RegisterViewModel extends BaseObservable {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                t.printStackTrace();
-                Toast.makeText(context, "Something went wrong...", Toast.LENGTH_SHORT).show();
+                httpService.showClientErrors(context, t);
             }
         });
     }

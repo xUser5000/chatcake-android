@@ -14,17 +14,24 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
 
+    private RoomsFragment roomsFragment;
+    private ProfileFragment profileFragment;
+    private NotificationFragment notificationFragment;
+
     public ViewPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         this.context = context;
+        this.roomsFragment = new RoomsFragment();
+        this.profileFragment = new ProfileFragment();
+        this.notificationFragment = new NotificationFragment();
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0: return new RoomsFragment();
-            case 1: return new ProfileFragment();
-            case 2: return new NotificationFragment();
+            case 0: return roomsFragment;
+            case 1: return profileFragment;
+            case 2: return notificationFragment;
             default: return null;
         }
     }
@@ -44,4 +51,5 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             default: return null;
         }
     }
+
 }
