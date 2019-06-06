@@ -8,6 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Accent Button -->
+    <style name="accent_button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/secondary_button_background</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

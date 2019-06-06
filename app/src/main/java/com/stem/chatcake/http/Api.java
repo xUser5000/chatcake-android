@@ -8,6 +8,7 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -22,6 +23,10 @@ public interface Api {
     // login
     @POST("auth/login")
     Call<User> login (@Body User user);
+
+    // log out
+    @DELETE("auth/logout")
+    Call<ResponseBody> logout (@Header("Authorization") String token);
 
     // create a new room
     @POST("room/create/{roomName}")

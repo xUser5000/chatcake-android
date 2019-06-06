@@ -24,16 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-@Getter
-@Setter
 @Builder
 public class RoomsViewModel extends BaseObservable implements
         SwipeRefreshLayout.OnRefreshListener,
@@ -153,7 +149,7 @@ public class RoomsViewModel extends BaseObservable implements
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // go to the room activity
         Room room = roomsAdapter.getItem(position);
-        Intent intent = new Intent(getContext(), RoomActivity.class);
+        Intent intent = new Intent(context, RoomActivity.class);
         intent.putExtra("roomName", room.getName());
         intent.putExtra("roomId", room.getId());
         context.startActivity(intent);

@@ -2,7 +2,7 @@ package com.stem.chatcake.viewmodel;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.BaseObservable;
+import android.databinding.ObservableField;
 import android.widget.Toast;
 
 import com.stem.chatcake.model.User;
@@ -11,16 +11,12 @@ import com.stem.chatcake.service.StorageService;
 import com.stem.chatcake.view.HomeActivity;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@Getter
-@Setter
 @Builder
-public class LoginViewModel extends BaseObservable {
+public class LoginViewModel {
 
     // dependencies
     private Context context;
@@ -28,20 +24,19 @@ public class LoginViewModel extends BaseObservable {
     private StorageService storageService;
 
     // state
-    private String username;
-    private String password;
-
+    public final ObservableField<String> username = new ObservableField<>();
+    public final ObservableField<String> password = new ObservableField<>();
 
     public void login () {
-        if (username == null || password == null) {
+        if (username.get() == null || password.get() == null) {
             Toast.makeText(context, "Please, fill out all the field", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // constructing the user
         User user = User.builder()
-                .username(username)
-                .password(password)
+                .username(username.get())
+                .password(password.get())
                 .build();
 
         Call<User> call = httpService.getApi().login(user);
@@ -57,7 +52,7 @@ public class LoginViewModel extends BaseObservable {
                 storageService.saveUserInfo(response.body());
 
                 // display a welcome message
-                Toast.makeText(context, "Welcome" + response.body().getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Welcome " + response.body().getName(), Toast.LENGTH_SHORT).show();
 
                 // redirect to the home page
                 Intent intent = new Intent(context, HomeActivity.class);

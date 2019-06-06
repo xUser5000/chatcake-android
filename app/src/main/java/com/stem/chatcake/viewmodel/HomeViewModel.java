@@ -1,7 +1,7 @@
 package com.stem.chatcake.viewmodel;
 
 import android.app.Activity;
-import android.databinding.BaseObservable;
+import android.databinding.ObservableField;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -13,13 +13,9 @@ import com.stem.chatcake.service.SocketService;
 import com.stem.chatcake.service.StorageService;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Builder
-public class HomeViewModel extends BaseObservable {
+public class HomeViewModel {
 
     // dependencies
     private Activity host;
@@ -28,14 +24,14 @@ public class HomeViewModel extends BaseObservable {
     private FragmentManager fragmentManager;
 
     // state
-    private String name;
+    public final ObservableField<String> name = new ObservableField<>();
     private boolean connected;
 
     public void init () {
 
         connect();
 
-        setName(storageService.getUserInfo().getName());
+        name.set(storageService.getUserInfo().getName());
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(host, fragmentManager);
         ViewPager viewPager = host.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);

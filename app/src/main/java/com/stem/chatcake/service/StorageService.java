@@ -51,6 +51,12 @@ public class StorageService {
         return sharedPreferences.getString("token", null);
     }
 
+    public void deleteToken () {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("token");
+        editor.apply();
+    }
+
     public boolean loggedIn () {
         return sharedPreferences.contains("token");
     }

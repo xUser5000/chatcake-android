@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.stem.chatcake.R;
 import com.stem.chatcake.databinding.FragmentRoomsBinding;
 import com.stem.chatcake.service.HttpService;
-import com.stem.chatcake.service.SocketService;
 import com.stem.chatcake.service.StorageService;
 import com.stem.chatcake.viewmodel.RoomsViewModel;
 

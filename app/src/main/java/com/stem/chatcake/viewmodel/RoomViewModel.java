@@ -2,7 +2,7 @@ package com.stem.chatcake.viewmodel;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.databinding.BaseObservable;
+import android.databinding.ObservableField;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,16 +20,12 @@ import com.stem.chatcake.view.RoomInfoActivity;
 import java.util.ArrayList;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-@Getter
-@Setter
 @Builder
-public class RoomViewModel extends BaseObservable implements SocketService.OnMessageReceivedListener {
+public class RoomViewModel implements SocketService.OnMessageReceivedListener {
 
     // dependencies
     private Activity host;
@@ -43,14 +39,14 @@ public class RoomViewModel extends BaseObservable implements SocketService.OnMes
     private RoomMessagesAdapter messagesAdapter;
 
     // state
-    private String roomName;
-    private String content;
+    public final ObservableField<String> roomName = new ObservableField<>();
+    public final ObservableField<String> content = new ObservableField<>();
 
     private final String ROOM_INFO_DIALOG_TAG = "room_info";
 
     // init method
     public void init () {
-        roomName = data.getName();
+        roomName.set(data.getName());
         initMessagesListView();
         subscribe();
         fetchRoom();
@@ -89,6 +85,7 @@ public class RoomViewModel extends BaseObservable implements SocketService.OnMes
                 data.setMessages(fetchedRoom.getMessages());
 
                 messagesAdapter.addAll(data.getMessages());
+                messagesListView.setSelection(messagesAdapter.getCount() - 1);
             }
 
             @Override
@@ -118,17 +115,29 @@ public class RoomViewModel extends BaseObservable implements SocketService.OnMes
 
     @Override
     public void messageReceived(Message message) {
-        Toast.makeText(host, message.getContent(), Toast.LENGTH_SHORT).show();
+        addMessage(message);
     }
 
     public void sendMessage () {
+
+        if (content.get() == null || content.get().equals("")) {
+            Toast.makeText(host, "Write a message", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Message message = Message.builder()
                 .roomId(data.getId())
-                .content(content)
+                .content(content.get())
                 .from(storageService.getUsername())
                 .build();
         socketService.sendMessage(message);
+        content.set("");
+        addMessage(message);
+    }
+
+    private void addMessage (Message message) {
         messagesAdapter.add(message);
+        messagesListView.setSelection(messagesAdapter.getCount() - 1);
     }
 
 }

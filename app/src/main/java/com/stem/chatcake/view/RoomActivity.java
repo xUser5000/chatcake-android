@@ -38,6 +38,7 @@ public class RoomActivity extends AppCompatActivity {
                 .messagesListView(messagesListView)
                 .build();
         binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(this);
         viewModel.init();
 
     }

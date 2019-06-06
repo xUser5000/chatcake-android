@@ -34,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Name"
-                    android:text="@={viewModel.name}"/>
+                    android:text="@={viewModel.name}" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Username"
-                    android:text="@={viewModel.username}"/>
+                    android:text="@={viewModel.username}" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Password"
                     android:inputType="textPassword"
-                    android:text="@={viewModel.password}"/>
+                    android:text="@={viewModel.password}" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -77,13 +77,12 @@
             android:padding="50dp">
 
             <Button
+                style="@style/accent_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/secondary_button_background"
                 android:onClick="@{() -> viewModel.register()}"
-                android:text="Register"
-                android:textColor="@android:color/white" />
+                android:text="Register" />
 
         </RelativeLayout>
 

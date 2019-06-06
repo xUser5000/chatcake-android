@@ -1,7 +1,10 @@
 package com.stem.chatcake.Fragment;
 
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +12,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stem.chatcake.R;
+import com.stem.chatcake.databinding.FargmentProfileBinding;
+import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.StorageService;
+import com.stem.chatcake.viewmodel.ProfileViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends Fragment {
+
+    private ProfileViewModel viewModel;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -24,15 +33,21 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View parent =  inflater.inflate(R.layout.fargment_profile, container, false);
+        FargmentProfileBinding binding = DataBindingUtil.inflate(inflater, R.layout.fargment_profile, container, false);
+        View parent = binding.getRoot();
 
-        TextView usernameText = parent.findViewById(R.id.profile_username_text);
-        StorageService storageService = StorageService.getInstance(getContext());
-
-        String username = "Username: " + storageService.getUsername();
-        usernameText.setText(username);
-
+        // dependency Injection
+        viewModel = ProfileViewModel.builder()
+                .context(getContext())
+                .httpService(HttpService.getInstance())
+                .storageService(StorageService.getInstance(getContext()))
+                .build();
+        binding.setViewModel(viewModel);
         return parent;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        viewModel.init();
+    }
 }
