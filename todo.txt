@@ -8,7 +8,7 @@
 // hide delete buttons from ordinary members
 // modify the members list view divider
 // internet connection service
-using ConnectionService all over the whole application
+// using ConnectionService all over the whole application
 message sent toast
 "no members yet" text view
 "no messages yet" message
