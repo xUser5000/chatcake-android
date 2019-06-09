@@ -10,6 +10,7 @@ import com.stem.chatcake.R;
 import com.stem.chatcake.adapter.SearchResultsAdapter;
 import com.stem.chatcake.databinding.ActivitySearchBinding;
 import com.stem.chatcake.model.User;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.service.StateService;
@@ -37,7 +38,8 @@ public class SearchActivity extends AppCompatActivity {
         SearchResultsAdapter resultsAdapter = new SearchResultsAdapter(this, 0, new ArrayList<User>())
                 .setHttpService(httpService)
                 .setLocalStorageService(localStorageService)
-                .setStateService(stateService);
+                .setStateService(stateService)
+                .setConnectionService(ConnectionService.getInstance());
 
         // dependency injection
         viewModel = SearchViewModel.builder()
@@ -45,6 +47,7 @@ public class SearchActivity extends AppCompatActivity {
                 .httpService(httpService)
                 .localStorageService(localStorageService)
                 .stateService(stateService)
+                .connectionService(ConnectionService.getInstance())
                 .resultsListView(resultsListView)
                 .resultsAdapter(resultsAdapter)
                 .build();

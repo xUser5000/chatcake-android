@@ -20,11 +20,11 @@ public class ConnectionService {
     public boolean getConnectionState (Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getActiveNetworkInfo();
-        return info != null && info.isConnected();
+        return info == null || !info.isConnected();
     }
 
     public void showMessage (Context context) {
-        String MESSAGE = "Check your internet connection and try again...";
+        String MESSAGE = "Check your internet connection and try again";
         Toast.makeText(context, MESSAGE, Toast.LENGTH_SHORT).show();
     }
 }

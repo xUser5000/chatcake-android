@@ -32,7 +32,7 @@ public class LoginViewModel {
     public void login () {
 
         // check internet connection
-        if (!connectionService.getConnectionState(host)) {
+        if (connectionService.getConnectionState(host)) {
             connectionService.showMessage(host);
             return;
         }

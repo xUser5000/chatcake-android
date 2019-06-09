@@ -33,7 +33,7 @@ public class RegisterViewModel {
     public void register () {
 
         // check internet connection
-        if (!connectionService.getConnectionState(context)) {
+        if (connectionService.getConnectionState(context)) {
             connectionService.showMessage(context);
             return;
         }

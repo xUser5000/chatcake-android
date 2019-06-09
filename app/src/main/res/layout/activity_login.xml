@@ -59,8 +59,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="50dp">
+            android:layout_weight="1">
 
             <Button
                 style="@style/accent_button"
@@ -68,7 +67,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:onClick="@{() -> viewModel.login()}"
-                android:text="Log in" />
+                android:text="Log in"
+                android:layout_margin="50dp" />
 
         </RelativeLayout>
 

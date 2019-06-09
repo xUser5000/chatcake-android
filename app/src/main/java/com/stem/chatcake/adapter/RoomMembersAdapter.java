@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.stem.chatcake.R;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.service.StateService;
@@ -30,6 +31,7 @@ public class RoomMembersAdapter extends ArrayAdapter<String> {
     private HttpService httpService;
     private LocalStorageService localStorageService;
     private StateService stateService;
+    private ConnectionService connectionService;
     private boolean admin;
 
     public RoomMembersAdapter (Context context, int res, List<String> members) {
@@ -56,6 +58,11 @@ public class RoomMembersAdapter extends ArrayAdapter<String> {
         return this;
     }
 
+    public RoomMembersAdapter setConnectionService(ConnectionService connectionService) {
+        this.connectionService = connectionService;
+        return this;
+    }
+
     @NonNull
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -77,6 +84,13 @@ public class RoomMembersAdapter extends ArrayAdapter<String> {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // check internet connection
+                if (connectionService.getConnectionState(context)) {
+                    connectionService.showMessage(context);
+                    return;
+                }
+
                 String token = localStorageService.getToken();
                 String roomId = stateService.getData().getId();
                 final String username = getItem(position);

@@ -74,7 +74,7 @@ public class RoomsViewModel extends BaseObservable implements
     private void fetchRooms () {
 
         // check internet connection
-        if (!connectionService.getConnectionState(context)) {
+        if (connectionService.getConnectionState(context)) {
             connectionService.showMessage(context);
             return;
         }

@@ -79,7 +79,7 @@ public class RoomViewModel extends DataSetObserver implements SocketService.OnMe
     private void fetchRoom () {
 
         // check internet connection
-        if (!connectionService.getConnectionState(host)) {
+        if (connectionService.getConnectionState(host)) {
             connectionService.showMessage(host);
             return;
         }

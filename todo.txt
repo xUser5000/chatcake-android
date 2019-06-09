@@ -1,0 +1,21 @@
+// Test Message listener
+// "add member" feature (with search)
+// figure out a way to share room state between RoomActivity, RoomInfoActivity and SearchActivity
+// modify the API to dynamically subscribe the user to his chat room once authorized
+// figure out a standard way to send json objects over socket
+// "remove member" feature
+// "log out" feature
+// hide delete buttons from ordinary members
+// modify the members list view divider
+// internet connection service
+using ConnectionService all over the whole application
+message sent toast
+"no members yet" text view
+"no messages yet" message
+"admin has removed () from room"
+"admin has added () to room"
+user avatar feature
+room avatar feature
+message dates
+send image messages
+Friends chatting

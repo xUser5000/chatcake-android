@@ -45,7 +45,6 @@ public class HomeViewModel {
         socketService.connect(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(host, "Here", Toast.LENGTH_SHORT).show();
                 // authentication
                 String token = localStorageService.getToken();
                 socketService.authenticate(host, token, new Runnable() {

@@ -8,6 +8,7 @@ import android.widget.ListView;
 
 import com.stem.chatcake.model.Room;
 import com.stem.chatcake.model.User;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.service.StateService;
@@ -27,6 +28,7 @@ public class SearchViewModel extends Observable.OnPropertyChangedCallback {
     private HttpService httpService;
     private LocalStorageService localStorageService;
     private StateService stateService;
+    private ConnectionService connectionService;
     private Room room;
 
     private ListView resultsListView;
@@ -45,6 +47,13 @@ public class SearchViewModel extends Observable.OnPropertyChangedCallback {
     }
 
     private void fetchResults () {
+
+        // check internet connection
+        if (connectionService.getConnectionState(context)) {
+            connectionService.showMessage(context);
+            return;
+        }
+
         String token = localStorageService.getToken();
         String queryString = query.get();
         call = httpService.getApi().searchForUser(token, queryString);

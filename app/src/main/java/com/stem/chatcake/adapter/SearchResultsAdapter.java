@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.stem.chatcake.R;
 import com.stem.chatcake.model.Room;
 import com.stem.chatcake.model.User;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.service.StateService;
@@ -30,6 +31,7 @@ public class SearchResultsAdapter extends ArrayAdapter<User> {
     private HttpService httpService;
     private LocalStorageService localStorageService;
     private StateService stateService;
+    private ConnectionService connectionService;
 
     private Room room;
 
@@ -51,6 +53,11 @@ public class SearchResultsAdapter extends ArrayAdapter<User> {
 
     public SearchResultsAdapter setStateService(StateService stateService) {
         this.stateService = stateService;
+        return this;
+    }
+
+    public SearchResultsAdapter setConnectionService (ConnectionService connectionService) {
+        this.connectionService = connectionService;
         return this;
     }
 
@@ -91,6 +98,13 @@ public class SearchResultsAdapter extends ArrayAdapter<User> {
             addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    // check internet connection
+                    if (connectionService.getConnectionState(context)) {
+                        connectionService.showMessage(context);
+                        return;
+                    }
+
                     showLabel(addButton, stateLabel);
                     stateLabel.setText("Adding....");
                     stateLabel.setTextColor(context.getResources().getColor(R.color.colorPrimary));

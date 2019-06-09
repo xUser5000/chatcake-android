@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.stem.chatcake.R;
 import com.stem.chatcake.adapter.RoomMembersAdapter;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.service.StateService;
@@ -38,7 +39,8 @@ public class RoomInfoActivity extends AppCompatActivity {
         RoomMembersAdapter roomMembersAdapter = new RoomMembersAdapter(this, 0, new ArrayList<String>())
                 .setHttpService(httpService)
                 .setLocalStorageService(localStorageService)
-                .setStateService(stateService);
+                .setStateService(stateService)
+                .setConnectionService(ConnectionService.getInstance());
 
         // injecting dependencies into the view model
         viewModel = RoomInfoViewModel.builder()
