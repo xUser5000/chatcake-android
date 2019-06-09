@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/main_activity_background"
         android:orientation="vertical"
-        tools:context=".view.MainActivity">
+        tools:context=".activity.MainActivity">
 
         <TextView
             android:layout_width="match_parent"

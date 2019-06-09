@@ -1,4 +1,4 @@
-package com.stem.chatcake.Fragment;
+package com.stem.chatcake.fragment;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -15,8 +15,10 @@ import android.widget.TextView;
 
 import com.stem.chatcake.R;
 import com.stem.chatcake.databinding.FragmentRoomsBinding;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
-import com.stem.chatcake.service.StorageService;
+import com.stem.chatcake.service.LocalStorageService;
+import com.stem.chatcake.service.StateService;
 import com.stem.chatcake.viewmodel.RoomsViewModel;
 
 public class RoomsFragment extends Fragment {
@@ -39,13 +41,14 @@ public class RoomsFragment extends Fragment {
 
         // Dependency Injection for the dialog
         CreateRoomDialogFragment dialogFragment = CreateRoomDialogFragment
-                .newInstance(HttpService.getInstance(), StorageService.getInstance(getContext()));
+                .newInstance(HttpService.getInstance(), LocalStorageService.getInstance(getContext()));
 
         // Dependency Injection for the view model
         viewModel = RoomsViewModel.builder()
                 .context(getContext())
                 .httpService(HttpService.getInstance())
-                .storageService(StorageService.getInstance(getContext()))
+                .localStorageService(LocalStorageService.getInstance(getContext()))
+                .connectionService(ConnectionService.getInstance())
                 .refreshLayout(refreshLayout)
                 .roomsListView(roomsListView)
                 .noRoomsTextView(noRooms)

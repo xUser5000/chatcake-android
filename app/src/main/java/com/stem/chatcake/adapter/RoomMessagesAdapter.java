@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.stem.chatcake.R;
 import com.stem.chatcake.model.Message;
-import com.stem.chatcake.service.StorageService;
+import com.stem.chatcake.service.LocalStorageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +24,14 @@ import lombok.Setter;
 public class RoomMessagesAdapter extends ArrayAdapter<Message> {
 
     private Context context;
-    private StorageService storageService;
+    private LocalStorageService localStorageService;
     private ArrayList<Message> messages;
 
-    public RoomMessagesAdapter(@NonNull Context context, int resource, @NonNull List<Message> objects, StorageService storageService) {
+    public RoomMessagesAdapter(@NonNull Context context, int resource, @NonNull List<Message> objects, LocalStorageService localStorageService) {
         super(context, resource, objects);
         this.messages = (ArrayList<Message>) objects;
         this.context = context;
-        this.storageService = storageService;
+        this.localStorageService = localStorageService;
     }
 
     @NonNull
@@ -52,7 +52,7 @@ public class RoomMessagesAdapter extends ArrayAdapter<Message> {
 
 
         // style the message
-        String username = storageService.getUsername();
+        String username = localStorageService.getUsername();
 
         if (username.equals(message.getFrom())) {
             messageBox.setBackground(context.getDrawable(R.drawable.message_blue_background));

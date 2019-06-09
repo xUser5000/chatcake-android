@@ -1,4 +1,4 @@
-package com.stem.chatcake.Fragment;
+package com.stem.chatcake.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +13,7 @@ import android.widget.EditText;
 import com.stem.chatcake.R;
 import com.stem.chatcake.model.Room;
 import com.stem.chatcake.service.HttpService;
-import com.stem.chatcake.service.StorageService;
+import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.viewmodel.RoomsViewModel;
 
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class CreateRoomDialogFragment extends DialogFragment {
 
     // dependencies
     private HttpService httpService;
-    private StorageService storageService;
+    private LocalStorageService localStorageService;
 
     private EditText roomNameText;
     private Button createRoomButton;
@@ -37,10 +37,10 @@ public class CreateRoomDialogFragment extends DialogFragment {
 
     public CreateRoomDialogFragment () {}
 
-    public static CreateRoomDialogFragment newInstance (HttpService httpService, StorageService storageService) {
+    public static CreateRoomDialogFragment newInstance (HttpService httpService, LocalStorageService localStorageService) {
         CreateRoomDialogFragment fragment = new CreateRoomDialogFragment();
         fragment.setHttpService(httpService);
-        fragment.setStorageService(storageService);
+        fragment.setLocalStorageService(localStorageService);
         return fragment;
     }
 
@@ -67,7 +67,7 @@ public class CreateRoomDialogFragment extends DialogFragment {
     }
 
     public void createRoom () {
-        String token = storageService.getToken();
+        String token = localStorageService.getToken();
         String roomName = roomNameText.getText().toString().trim();
         Call<Room> call = httpService.getApi().createRoom(token, roomName);
         call.enqueue(new Callback<Room>() {

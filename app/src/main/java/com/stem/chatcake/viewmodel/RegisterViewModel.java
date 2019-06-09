@@ -6,8 +6,9 @@ import android.databinding.ObservableField;
 import android.widget.Toast;
 
 import com.stem.chatcake.model.User;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
-import com.stem.chatcake.view.LoginActivity;
+import com.stem.chatcake.activity.LoginActivity;
 
 import lombok.Builder;
 import okhttp3.ResponseBody;
@@ -21,6 +22,7 @@ public class RegisterViewModel {
     // dependencies
     private Context context;
     private HttpService httpService;
+    private ConnectionService connectionService;
 
     // state
     public final ObservableField<String> name = new ObservableField<>();
@@ -30,8 +32,13 @@ public class RegisterViewModel {
     // register a new user
     public void register () {
 
-        // validation
+        // check internet connection
+        if (!connectionService.getConnectionState(context)) {
+            connectionService.showMessage(context);
+            return;
+        }
 
+        // validation
         if (name.get() == null || username.get() == null || password.get() == null) {
             Toast.makeText(context, "Please, fill out all the field", Toast.LENGTH_SHORT).show();
             return;

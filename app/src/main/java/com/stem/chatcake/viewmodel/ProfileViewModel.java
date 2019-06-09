@@ -3,11 +3,10 @@ package com.stem.chatcake.viewmodel;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.ObservableField;
-import android.widget.Toast;
 
 import com.stem.chatcake.service.HttpService;
-import com.stem.chatcake.service.StorageService;
-import com.stem.chatcake.view.MainActivity;
+import com.stem.chatcake.service.LocalStorageService;
+import com.stem.chatcake.activity.MainActivity;
 
 import lombok.Builder;
 import okhttp3.ResponseBody;
@@ -20,19 +19,19 @@ public class ProfileViewModel {
 
     // dependencies
     private Context context;
-    private StorageService storageService;
+    private LocalStorageService localStorageService;
     private HttpService httpService;
 
     // state
     public final ObservableField<String> username = new ObservableField<>();
 
     public void init () {
-        username.set("Username: " + storageService.getUsername());
+        username.set("Username: " + localStorageService.getUsername());
     }
 
     // logout function
     public void logout () {
-        String token = storageService.getToken();
+        String token = localStorageService.getToken();
         Call<ResponseBody> call = httpService.getApi().logout(token);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -43,7 +42,7 @@ public class ProfileViewModel {
                 }
 
                 // delete the token from the local storage
-                storageService.deleteToken();
+                localStorageService.deleteToken();
 
                 // redirect to the main screen
                 context.startActivity(new Intent(context, MainActivity.class));

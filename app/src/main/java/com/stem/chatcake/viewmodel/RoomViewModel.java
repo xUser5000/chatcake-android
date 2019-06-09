@@ -2,6 +2,7 @@ package com.stem.chatcake.viewmodel;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.databinding.ObservableField;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,10 +13,12 @@ import com.stem.chatcake.R;
 import com.stem.chatcake.adapter.RoomMessagesAdapter;
 import com.stem.chatcake.model.Message;
 import com.stem.chatcake.model.Room;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
+import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.service.SocketService;
-import com.stem.chatcake.service.StorageService;
-import com.stem.chatcake.view.RoomInfoActivity;
+import com.stem.chatcake.service.StateService;
+import com.stem.chatcake.activity.RoomInfoActivity;
 
 import java.util.ArrayList;
 
@@ -25,13 +28,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Builder
-public class RoomViewModel implements SocketService.OnMessageReceivedListener {
+public class RoomViewModel extends DataSetObserver implements SocketService.OnMessageReceivedListener {
 
     // dependencies
     private Activity host;
     private HttpService httpService;
-    private StorageService storageService;
+    private LocalStorageService localStorageService;
     private SocketService socketService;
+    private StateService stateService;
+    private ConnectionService connectionService;
     private Room data;
 
     private LinearLayout mainContent;
@@ -46,14 +51,19 @@ public class RoomViewModel implements SocketService.OnMessageReceivedListener {
 
     // init method
     public void init () {
+        getData();
         roomName.set(data.getName());
         initMessagesListView();
-        subscribe();
         fetchRoom();
+        subscribe();
     }
 
     private void subscribe () {
-        socketService.subscribe(data.getId(), host, this);
+        socketService.subscribe(host, this);
+    }
+
+    private void getData () {
+        data = stateService.getData();
     }
 
     private void initMessagesListView () {
@@ -61,13 +71,21 @@ public class RoomViewModel implements SocketService.OnMessageReceivedListener {
                 host,
                 R.layout.room_messages_list_item,
                 new ArrayList<Message>(),
-                storageService);
+                localStorageService);
+        messagesAdapter.registerDataSetObserver(this);
         messagesListView.setAdapter(messagesAdapter);
     }
 
     private void fetchRoom () {
+
+        // check internet connection
+        if (!connectionService.getConnectionState(host)) {
+            connectionService.showMessage(host);
+            return;
+        }
+
         String roomId = data.getId();
-        String token = storageService.getToken();
+        String token = localStorageService.getToken();
         startLoading();
         Call<Room> call = httpService.getApi().getRoomInfo(token, roomId);
         call.enqueue(new Callback<Room>() {
@@ -84,8 +102,9 @@ public class RoomViewModel implements SocketService.OnMessageReceivedListener {
                 data.setMembers(fetchedRoom.getMembers());
                 data.setMessages(fetchedRoom.getMessages());
 
+                // save to the state service and messages adapter
+                stateService.setData(data);
                 messagesAdapter.addAll(data.getMessages());
-                messagesListView.setSelection(messagesAdapter.getCount() - 1);
             }
 
             @Override
@@ -97,12 +116,7 @@ public class RoomViewModel implements SocketService.OnMessageReceivedListener {
     }
 
     public void goToRoomInfo () {
-        if (data != null) {
-            Intent intent = new Intent(host, RoomInfoActivity.class);
-            intent.putExtra("admin", data.getAdmin());
-            intent.putStringArrayListExtra("members", (ArrayList<String>) data.getMembers());
-            host.startActivity(intent);
-        }
+        host.startActivity(new Intent(host, RoomInfoActivity.class));
     }
 
     private void startLoading () {
@@ -111,11 +125,6 @@ public class RoomViewModel implements SocketService.OnMessageReceivedListener {
 
     private void stopLoading () {
         mainContent.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void messageReceived(Message message) {
-        addMessage(message);
     }
 
     public void sendMessage () {
@@ -128,7 +137,7 @@ public class RoomViewModel implements SocketService.OnMessageReceivedListener {
         Message message = Message.builder()
                 .roomId(data.getId())
                 .content(content.get())
-                .from(storageService.getUsername())
+                .from(localStorageService.getUsername())
                 .build();
         socketService.sendMessage(message);
         content.set("");
@@ -140,4 +149,15 @@ public class RoomViewModel implements SocketService.OnMessageReceivedListener {
         messagesListView.setSelection(messagesAdapter.getCount() - 1);
     }
 
+    @Override
+    public void OnMessageReceived(Message message) {
+        messagesAdapter.add(message);
+    }
+
+    // scroll the list view to the bottom when the data set change
+
+    @Override
+    public void onChanged() {
+        messagesListView.setSelection(messagesAdapter.getCount() - 1);
+    }
 }

@@ -1,4 +1,4 @@
-package com.stem.chatcake.Fragment;
+package com.stem.chatcake.fragment;
 
 
 import android.databinding.DataBindingUtil;
@@ -9,12 +9,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.stem.chatcake.R;
 import com.stem.chatcake.databinding.FargmentProfileBinding;
 import com.stem.chatcake.service.HttpService;
-import com.stem.chatcake.service.StorageService;
+import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.viewmodel.ProfileViewModel;
 
 /**
@@ -40,7 +39,7 @@ public class ProfileFragment extends Fragment {
         viewModel = ProfileViewModel.builder()
                 .context(getContext())
                 .httpService(HttpService.getInstance())
-                .storageService(StorageService.getInstance(getContext()))
+                .localStorageService(LocalStorageService.getInstance(getContext()))
                 .build();
         binding.setViewModel(viewModel);
         return parent;

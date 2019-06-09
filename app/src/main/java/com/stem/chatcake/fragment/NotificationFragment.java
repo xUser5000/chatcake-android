@@ -1,4 +1,4 @@
-package com.stem.chatcake.Fragment;
+package com.stem.chatcake.fragment;
 
 
 import android.os.Bundle;

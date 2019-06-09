@@ -6,11 +6,13 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 import com.github.nkzawa.socketio.client.IO;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.stem.chatcake.model.Message;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+
 
 public class SocketService {
 
@@ -21,8 +23,7 @@ public class SocketService {
 
     private boolean connected = false;
     private boolean authorized = false;
-    private ArrayList<String> subscribedRooms = new ArrayList<>();
-    private final String URI = "http://192.168.1.4:5000";
+    private final String URI = "http://" + RemoteConstants.HOST + ":5000";
 
     // private constructor
     private SocketService () {
@@ -35,7 +36,7 @@ public class SocketService {
     }
 
     // initialize the connection
-    public void connect () {
+    public void connect (Runnable runnable) {
         if (connected) return;
 
         IO.Options options = new IO.Options();
@@ -45,6 +46,7 @@ public class SocketService {
             socket = IO.socket(URI, options);
             socket.connect();
             connected = true;
+            runnable.run();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -62,28 +64,33 @@ public class SocketService {
                 host.runOnUiThread(runnable);
             }
         });
+
     }
 
-    public void subscribe (String roomId, final Activity host, final OnMessageReceivedListener onMessageReceivedListener) {
-        if (subscribedRooms.contains(roomId)) return;
-
-        socket.emit("subscribe", roomId);
-        subscribedRooms.add(roomId);
-
+    // notify observers on each event:
+    public void subscribe (final Activity host, final Object viewModel) {
         socket.on("message", new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
                 host.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        JsonObject object = (JsonObject) args[0];
-                        Message message = Message.builder()
-                                .roomId(object.get("roomId").toString())
-                                .content(object.get("content").toString())
-                                .from(object.get("from").toString())
-                                .build();
+                        JSONObject data = (JSONObject) args[0];
 
-                        onMessageReceivedListener.messageReceived(message);
+                        try {
+
+                            Message message = Message.builder()
+                                    .from(data.getString("from"))
+                                    .content(data.getString("content"))
+                                    .roomId(data.getString("roomId"))
+                                    .build();
+                            OnMessageReceivedListener listener = (OnMessageReceivedListener) viewModel;
+                            listener.OnMessageReceived(message);
+
+                        } catch (JSONException ex) {
+                            ex.printStackTrace();
+                        }
+
                     }
                 });
             }
@@ -96,7 +103,6 @@ public class SocketService {
     }
 
     public interface OnMessageReceivedListener {
-        void messageReceived (Message message);
+        void OnMessageReceived (Message message);
     }
-
 }

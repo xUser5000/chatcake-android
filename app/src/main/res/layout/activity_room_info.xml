@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.RoomInfoActivity">
+    tools:context=".activity.RoomInfoActivity"
+    android:background="@android:color/white">
 
-    <!-- App Bar -->
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <!-- Room Info Label -->
-        <TextView
-            style="@style/AppBar_Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Room Info" />
-
-    </android.support.design.widget.AppBarLayout>
 
     <!-- Members and admin -->
     <LinearLayout
@@ -45,7 +32,9 @@
                 android:id="@+id/room_info_admin_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:text="xUser5000"
+                android:textSize="18sp"/>
 
         </LinearLayout>
 
@@ -65,10 +54,30 @@
             <ListView
                 android:id="@+id/room_info_members_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:listSelector="@android:color/transparent"
+                android:divider="@android:color/transparent" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/room_info_fab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <!-- Floating Action Button -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/room_info_add_member_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_person_add_white_24dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

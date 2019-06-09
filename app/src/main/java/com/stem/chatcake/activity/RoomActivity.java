@@ -1,4 +1,4 @@
-package com.stem.chatcake.view;
+package com.stem.chatcake.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -11,9 +11,11 @@ import android.widget.ListView;
 import com.stem.chatcake.R;
 import com.stem.chatcake.databinding.ActivityRoomBinding;
 import com.stem.chatcake.model.Room;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
 import com.stem.chatcake.service.SocketService;
-import com.stem.chatcake.service.StorageService;
+import com.stem.chatcake.service.LocalStorageService;
+import com.stem.chatcake.service.StateService;
 import com.stem.chatcake.viewmodel.RoomViewModel;
 
 public class RoomActivity extends AppCompatActivity {
@@ -27,30 +29,36 @@ public class RoomActivity extends AppCompatActivity {
         LinearLayout mainContent = parent.findViewById(R.id.room_main_content);
         ListView messagesListView = parent.findViewById(R.id.room_messages_list_view);
 
+        // set the data to the state service
+        Room data = getRoomFromIntent();
+        StateService stateService = StateService.getInstance();
+        stateService.setData(data);
+
         // dependency injection
         RoomViewModel viewModel = RoomViewModel.builder()
                 .host(this)
                 .httpService(HttpService.getInstance())
-                .storageService(StorageService.getInstance(this))
+                .localStorageService(LocalStorageService.getInstance(this))
                 .socketService(SocketService.getInstance())
-                .data(getRoomFromIntent())
+                .connectionService(ConnectionService.getInstance())
                 .mainContent(mainContent)
                 .messagesListView(messagesListView)
+                .stateService(StateService.getInstance())
                 .build();
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
-        viewModel.init();
 
+        viewModel.init();
     }
 
     private Room getRoomFromIntent () {
         Intent intent = getIntent();
         String roomName = intent.getStringExtra("roomName");
         String roomId = intent.getStringExtra("roomId");
-        Room room = Room.builder()
+        return Room.builder()
                 .name(roomName)
                 .id(roomId)
                 .build();
-        return room;
     }
+
 }

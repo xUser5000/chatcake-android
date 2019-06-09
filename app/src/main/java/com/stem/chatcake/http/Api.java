@@ -12,6 +12,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface Api {
@@ -28,6 +29,18 @@ public interface Api {
     @DELETE("auth/logout")
     Call<ResponseBody> logout (@Header("Authorization") String token);
 
+
+    // get the rooms for a specific user
+    @GET("user/getRooms")
+    Call<List<Room>> getRooms (@Header("Authorization") String token);
+
+    // search for a user
+    @GET("user/search/{query}")
+    Call<List<User>> searchForUser (
+            @Header("Authorization") String token,
+            @Path("query") String query
+    );
+
     // create a new room
     @POST("room/create/{roomName}")
     Call<Room> createRoom (
@@ -35,15 +48,27 @@ public interface Api {
             @Path("roomName") String roomName
     );
 
-    // get the rooms for a specific user
-    @GET("user/getRooms")
-    Call<List<Room>> getRooms (@Header("Authorization") String token);
-
     // get all the info about one room (including admin, members, messages) using its id
     @GET("room/getInfo/{roomId}")
     Call<Room> getRoomInfo (
             @Header("Authorization") String token,
             @Path("roomId") String roomId
+    );
+
+    // add a new member to the room
+    @PUT("room/addMember/{roomId}/{username}")
+    Call<ResponseBody> addMember (
+            @Header("Authorization") String token,
+            @Path("roomId") String roomId,
+            @Path("username") String username
+    );
+
+    // remove member from a room
+    @DELETE("room/removeMember/{roomId}/{username}")
+    Call<ResponseBody> removeMember (
+            @Header("Authorization") String token,
+            @Path("roomId") String roomId,
+            @Path("username") String username
     );
 
 }

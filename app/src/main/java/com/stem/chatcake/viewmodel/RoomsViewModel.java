@@ -13,12 +13,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.stem.chatcake.Fragment.CreateRoomDialogFragment;
+import com.stem.chatcake.fragment.CreateRoomDialogFragment;
 import com.stem.chatcake.R;
 import com.stem.chatcake.model.Room;
+import com.stem.chatcake.service.ConnectionService;
 import com.stem.chatcake.service.HttpService;
-import com.stem.chatcake.service.StorageService;
-import com.stem.chatcake.view.RoomActivity;
+import com.stem.chatcake.service.LocalStorageService;
+import com.stem.chatcake.activity.RoomActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +35,13 @@ import retrofit2.internal.EverythingIsNonNull;
 public class RoomsViewModel extends BaseObservable implements
         SwipeRefreshLayout.OnRefreshListener,
         CreateRoomDialogFragment.OnDialogDismissListener,
-        AdapterView.OnItemClickListener
-{
+        AdapterView.OnItemClickListener {
 
     // dependencies
     private Context context;
     private HttpService httpService;
-    private StorageService storageService;
+    private LocalStorageService localStorageService;
+    private ConnectionService connectionService;
     private FragmentManager fragmentManager;
 
     private SwipeRefreshLayout refreshLayout;
@@ -71,7 +72,14 @@ public class RoomsViewModel extends BaseObservable implements
 
     // get all rooms for the current user
     private void fetchRooms () {
-        String token = storageService.getToken();
+
+        // check internet connection
+        if (!connectionService.getConnectionState(context)) {
+            connectionService.showMessage(context);
+            return;
+        }
+
+        String token = localStorageService.getToken();
         startLoading();
         Call<List<Room>> call = httpService.getApi().getRooms(token);
         call.enqueue(new Callback<List<Room>>() {

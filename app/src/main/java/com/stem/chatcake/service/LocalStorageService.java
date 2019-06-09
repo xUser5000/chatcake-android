@@ -9,19 +9,19 @@ import com.stem.chatcake.model.User;
 
 import java.util.List;
 
-public class StorageService {
+public class LocalStorageService {
 
-    private static StorageService instance = null;
+    private static LocalStorageService instance = null;
     private SharedPreferences sharedPreferences;
     private Gson converter = new Gson();
 
-    private StorageService (Context context) {
+    private LocalStorageService(Context context) {
         this.sharedPreferences = context.getSharedPreferences("chatcake", Context.MODE_PRIVATE);
     }
 
-    public static StorageService getInstance(Context context) {
+    public static LocalStorageService getInstance(Context context) {
         if (instance == null)
-            instance = new StorageService(context);
+            instance = new LocalStorageService(context);
         return instance;
     }
 

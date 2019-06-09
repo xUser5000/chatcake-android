@@ -1,4 +1,4 @@
-package com.stem.chatcake.view;
+package com.stem.chatcake.activity;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.stem.chatcake.R;
 import com.stem.chatcake.databinding.ActivityMainBinding;
-import com.stem.chatcake.service.StorageService;
+import com.stem.chatcake.service.LocalStorageService;
 import com.stem.chatcake.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         // constructing the view model
         viewModel = MainViewModel.builder()
                 .host(this)
-                .storageService(StorageService.getInstance(this))
+                .localStorageService(LocalStorageService.getInstance(this))
                 .build();
 
         binding.setViewModel(viewModel);

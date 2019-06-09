@@ -20,7 +20,7 @@ public class HttpService {
     private static HttpService instance = null;
 
     private Api api;
-    private final String BASE_URL = "http://192.168.1.4:3000/api/";
+    private final String BASE_URL = "http://" + RemoteConstants.HOST + ":3000/api/";
     private Retrofit retrofit;
 
     private HttpService () {

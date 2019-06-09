@@ -6,9 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.stem.chatcake.Fragment.NotificationFragment;
-import com.stem.chatcake.Fragment.ProfileFragment;
-import com.stem.chatcake.Fragment.RoomsFragment;
+import com.stem.chatcake.fragment.NotificationFragment;
+import com.stem.chatcake.fragment.ProfileFragment;
+import com.stem.chatcake.fragment.RoomsFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 

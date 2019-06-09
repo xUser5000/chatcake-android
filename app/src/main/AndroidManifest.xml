@@ -3,6 +3,7 @@
     package="com.stem.chatcake">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -11,28 +12,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".view.RoomInfoActivity"
-            android:parentActivityName=".view.RoomActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".activity.SearchActivity"
+            android:parentActivityName=".activity.RoomInfoActivity"
+            android:label="Add member"/>
         <activity
-            android:name=".view.RoomActivity"
-            android:label="Room"
-            android:parentActivityName=".view.HomeActivity"
+            android:name=".activity.RoomInfoActivity"
+            android:parentActivityName=".activity.RoomActivity"
+            android:label="Room Info" />
+        <activity
+            android:name=".activity.RoomActivity"
+            android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".view.HomeActivity"
+            android:name=".activity.HomeActivity"
             android:label="ChatCake"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".view.RegisterActivity"
+            android:name=".activity.RegisterActivity"
             android:label="Register"
-            android:parentActivityName=".view.MainActivity" />
+            android:parentActivityName=".activity.MainActivity" />
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:label="Log in"
-            android:parentActivityName=".view.MainActivity" />
-        <activity android:name=".view.MainActivity">
+            android:parentActivityName=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
