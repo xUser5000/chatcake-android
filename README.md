@@ -12,6 +12,7 @@ Simple text chat application using Java and XML
 	<li>Socket.io client for android</li>
 	<li>lombok utility library</li>
 </ul>
+
 ### Design Patterns <br>
 
 <ul>
@@ -19,6 +20,7 @@ Simple text chat application using Java and XML
 	<li>Singleton pattern (for services)</li>
 	<li>Builder pattern (for models and view models)</li>
 </ul>
+
 ### Screenshots
 
 ![Screenshot](Screenshots/1.png)
