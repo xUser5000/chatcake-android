@@ -17,3 +17,4 @@ Some Design Patterns used: <br>
 	<li>Singleton pattern (for services)</li>
 	<li>Builder pattern (for models and view models)</li>
 </ul>
+![Demo](https://i.ibb.co/st54S1d/output.gif)
